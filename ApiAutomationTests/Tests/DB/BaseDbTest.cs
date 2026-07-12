@@ -1,0 +1,53 @@
+﻿using ApiAutomationTests.Infrastructure;
+using NUnit.Framework;
+using Testcontainers.PostgreSql;
+using Npgsql;
+using System.Threading.Tasks;
+
+namespace ApiAutomationTests.Tests.DB;
+
+public abstract class BaseDbTest
+{
+    protected static PostgreSqlContainer DbContainer { get; private set; } = null!;
+
+    protected string ConnectionString => DbContainer.GetConnectionString();
+
+    [OneTimeSetUp]
+    public async Task RunDockerContainer()
+    {
+        // LIVE-КОММЕНТАРИЙ: Создаем SQL-скрипт для инициализации таблицы posts
+        var initScript = @"
+            CREATE TABLE IF NOT EXISTS posts (
+                id SERIAL PRIMARY KEY,
+                title VARCHAR(255),
+                body TEXT,
+                user_id INT NOT NULL
+            );
+        ";
+
+        DbContainer = new PostgreSqlBuilder("postgres:16-alpine")
+            .WithDatabase("test_db")
+            .WithUsername("postgres")
+            .WithPassword("postgres")
+            .Build();
+
+        await DbContainer.StartAsync();
+
+        // Инициализируем базу вручную — выполняем SQL-скрипт через Npgsql,
+        // потому что в используемой версии Testcontainers нет метода WithInitScript
+        await using var conn = new NpgsqlConnection(ConnectionString);
+        await conn.OpenAsync();
+        await using var cmd = new NpgsqlCommand(initScript, conn);
+        await cmd.ExecuteNonQueryAsync();
+    }
+
+    [OneTimeTearDown]
+    public async Task StopDockerContainer()
+    {
+        if (DbContainer != null)
+        {
+            await DbContainer.StopAsync();
+            await DbContainer.DisposeAsync();
+        }
+    }
+}
