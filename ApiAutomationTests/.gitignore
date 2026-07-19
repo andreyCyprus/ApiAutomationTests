@@ -1,0 +1,85 @@
+# ==================== Build & Output ====================
+bin/
+obj/
+Build/
+Release/
+Debug/
+
+# ==================== Playwright ====================
+.playwright/
+playwright-report/
+test-results/
+screenshot/
+videos/
+traces/
+
+# ==================== .NET Specific ====================
+*.user
+*.suo
+*.sdf
+*.opensdf
+*.cache
+*.pdb
+*.dll
+*.exe
+*.xml
+*.log
+
+# ==================== Test Results ====================
+TestResults/
+*.trx
+*.coverage
+*.coveragexml
+
+# ==================== Environment & Config ====================
+.env
+appsettings.Development.json
+appsettings.Local.json
+secrets.json
+launchSettings.json
+
+# ==================== Logs ====================
+*.log
+logs/
+log/
+
+# ==================== IDE & Editors ====================
+# Visual Studio
+.vs/
+.vscode/
+
+# Rider / JetBrains
+.idea/
+*.sln.cache
+*.userprefs
+
+# VS Code
+.history/
+.ionide/
+
+# ==================== OS ====================
+.DS_Store
+Thumbs.db
+*.lock
+
+# ==================== Temporary ====================
+temp/
+tmp/
+*.tmp
+*.temp
+
+# ==================== Packages ====================
+packages/
+*.nupkg
+*.snupkg
+
+# ==================== Large files (optional) ====================
+# Если не хочешь использовать Git LFS
+*.zip
+*.rar
+*.7z
+*.iso
+
+# ==================== Local Development ====================
+*.local
+*.dev
