@@ -3,7 +3,7 @@ using Testcontainers.PostgreSql;
 using Npgsql;
 using System.Threading.Tasks;
 
-namespace ApiAutomationTests.Tests.DB;
+namespace ApiAutomationTests.Tests;
 
 [SetUpFixture]
 public class GlobalDbSetup
