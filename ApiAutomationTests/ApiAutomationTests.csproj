@@ -47,4 +47,8 @@
     </None>
   </ItemGroup>
 
+  <ItemGroup>
+    <None Include=".github\workflows\tests.yml" />
+  </ItemGroup>
+
 </Project>

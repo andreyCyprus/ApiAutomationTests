@@ -1,0 +1,67 @@
+name: Test Automation Suite (.NET 10)
+
+on:
+  push:
+    branches: [ "main", "master", "develop" ]
+  pull_request:
+    branches: [ "main", "master" ]
+  workflow_dispatch: # Возможность ручного запуска из UI GitHub
+
+jobs:
+  run-tests:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '10.0.x' # Указываем .NET 10 SDK
+
+    - name: Restore dependencies
+      run: dotnet restore
+
+    - name: Build solution
+      run: dotnet build --no-restore --configuration Release
+
+    - name: Install Playwright Browsers & Dependencies
+      run: |
+        # Собираем проект, чтобы появилось CLI-приложение Playwright в bin
+        dotnet build --configuration Release
+        # Устанавливаем системные зависимости Linux и сам Chromium/Firefox/WebKit
+        pwsh bin/Release/net10.0/playwright.ps1 install --with-deps
+
+    - name: Run Automation Tests
+      env:
+        # Переопределяем параметры под headless-режим в CI
+        UiSettings__Headless: "true"
+        # Выключаем вывод лишних логотипов .NET для чистоты логов
+        DOTNET_NOLOGO: "true"
+      run: |
+        dotnet test --no-build \
+                    --configuration Release \
+                    --logger "trx;LogFileName=test_results.trx" \
+                    --logger "html;LogFileName=test_report.html" \
+                    --filter "FullyQualifiedName!=ApiAutomationTests.Tests.API.PostsTests.GetPost_ShouldReturnUnauthorized"
+
+    - name: Upload Test Attachments (Screenshots & Traces)
+      if: always() # Выполняем шаг даже если тесты упали (Failed)
+      uses: actions/upload-artifact@v4
+      with:
+        name: test-failure-artifacts
+        path: |
+          **/Screenshots/*
+          **/TestResults/*.zip
+        retention-days: 14
+
+    - name: Upload Test Reports (HTML & TRX)
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: test-reports
+        path: |
+          **/TestResults/test_report.html
+          **/TestResults/test_results.trx
+        retention-days: 30
