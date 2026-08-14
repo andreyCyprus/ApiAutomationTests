@@ -48,7 +48,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include=".github\workflows\tests.yml" />
+    <None Include="C:\Users\andri\source\repos\ApiAutomationTests\.github\workflows\tests.yml" Link="tests.yml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include=".github\workflows\" />
   </ItemGroup>
 
 </Project>

@@ -42,10 +42,10 @@ jobs:
         DOTNET_NOLOGO: "true"
       run: |
         dotnet test --no-build \
-                    --configuration Release \
-                    --logger "trx;LogFileName=test_results.trx" \
-                    --logger "html;LogFileName=test_report.html" \
-                    --filter "FullyQualifiedName!=ApiAutomationTests.Tests.API.PostsTests.GetPost_ShouldReturnUnauthorized"
+        --configuration Release \
+        --logger "trx;LogFileName=test_results.trx" \
+        --logger "html;LogFileName=test_report.html"
+
 
     - name: Upload Test Attachments (Screenshots & Traces)
       if: always() # Выполняем шаг даже если тесты упали (Failed)
