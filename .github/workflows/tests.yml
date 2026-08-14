@@ -31,7 +31,8 @@ jobs:
         # Собираем проект, чтобы появилось CLI-приложение Playwright в bin
         dotnet build --configuration Release
         # Устанавливаем системные зависимости Linux и сам Chromium/Firefox/WebKit
-        pwsh bin/Release/net10.0/playwright.ps1 install --with-deps
+        pwsh -File ApiAutomationTests/bin/Release/net10.0/playwright.ps1 install --with-deps
+
 
     - name: Run Automation Tests
       env:
